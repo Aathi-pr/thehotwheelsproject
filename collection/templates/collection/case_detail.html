@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case {{ case.name }} — {% if collector %}{{ collector.name }}{% else %}Collection{% endif %}</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+        }
+
+        /* Button */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem 4%;
+            border-bottom: 4px solid var(--black);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* Hero */
+        .detail-hero {
+            padding: 6rem 4%;
+            border-bottom: 4px solid var(--black);
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.02) 2px,
+                    rgba(0,0,0,0.02) 4px
+                );
+        }
+
+        .detail-hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .detail-label {
+            display: inline-block;
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            border: 3px solid var(--black);
+            background: var(--yellow);
+        }
+
+        .detail-title {
+            font-size: clamp(2.5rem, 10vw, 8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            text-shadow: 5px 5px 0px var(--red);
+            line-height: 0.9;
+        }
+
+        .detail-meta {
+            display: flex;
+            gap: 3rem;
+            font-size: 1rem;
+            font-weight: 600;
+            flex-wrap: wrap;
+        }
+
+        .detail-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Cars Grid */
+        .cars-section {
+            padding: 6rem 4%;
+        }
+
+        .cars-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+            gap: 2rem;
+        }
+
+        /* Car Card */
+        .car-card {
+            border: 4px solid var(--black);
+            background: var(--white);
+            box-shadow: 6px 6px 0px var(--black);
+            transition: all 0.3s;
+        }
+
+        .car-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0px var(--black);
+        }
+
+        .car-image-wrapper {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            overflow: hidden;
+            border-bottom: 4px solid var(--black);
+            position: relative;
+        }
+
+        .car-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .car-card:hover .car-image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .car-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #ccc;
+        }
+
+        .car-content {
+            padding: 1.5rem;
+        }
+
+        .car-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .car-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .car-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .car-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            background: var(--black);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 2px solid var(--black);
+        }
+
+        .badge-sth {
+            background: var(--yellow);
+            color: var(--black);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .badge-th {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .badge-outline {
+            background: transparent;
+            color: var(--black);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 6rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .empty-state p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 4%;
+            }
+
+            .detail-hero {
+                padding: 4rem 4%;
+            }
+
+            .detail-title {
+                text-shadow: 3px 3px 0px var(--red);
+            }
+
+            .detail-meta {
+                gap: 1.5rem;
+                font-size: 0.875rem;
+            }
+
+            .cars-section {
+                padding: 4rem 4%;
+            }
+
+            .cars-grid {
+                gap: 1.5rem;
+            }
+
+            .car-card {
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .car-card:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 6px 6px 0px var(--black);
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.5em 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">Case {{ case.name }}</div>
+        <a href="{% url 'home' %}" class="button-54">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <!-- Hero -->
+    <div class="detail-hero">
+        <div class="detail-hero-content">
+            <div class="detail-label">{{ case.year }} Collection</div>
+            <h1 class="detail-title">Case {{ case.name }}</h1>
+            <div class="detail-meta">
+                <span class="detail-meta-item">
+                    <i class="fas fa-car"></i> {{ cars.count }} Cars
+                </span>
+                {% if case.release_date %}
+                <span class="detail-meta-item">
+                    <i class="far fa-calendar"></i> Released {{ case.release_date|date:"F Y" }}
+                </span>
+                {% endif %}
+                {% if case.description %}
+                <span class="detail-meta-item">
+                    <i class="fas fa-info-circle"></i> {{ case.description }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Cars Grid -->
+    <div class="cars-section">
+        <div class="cars-grid">
+            {% for car in cars %}
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    {% if car.image %}
+                    <img src="{{ car.image.url }}" alt="{{ car.casting_name }}">
+                    {% else %}
+                    <div class="car-placeholder">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="car-content">
+                    <h3 class="car-name">{{ car.casting_name }}</h3>
+                    <div class="car-details">
+                        <span class="car-detail-item">
+                            <i class="fas fa-calendar-alt"></i> {{ car.year }}
+                        </span>
+                        <span class="car-detail-item">
+                            <i class="fas fa-palette"></i> {{ car.color }}
+                        </span>
+                        {% if car.number %}
+                        <span class="car-detail-item">
+                            <i class="fas fa-hashtag"></i> {{ car.number }}
+                        </span>
+                        {% endif %}
+                        {% if car.quantity > 1 %}
+                        <span class="car-detail-item">
+                            <i class="fas fa-layer-group"></i> x{{ car.quantity }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="car-badges">
+                        {% if car.treasure_hunt == 'STH' %}
+                        <span class="badge badge-sth">
+                            <i class="fas fa-star"></i> STH
+                        </span>
+                        {% elif car.treasure_hunt == 'TH' %}
+                        <span class="badge badge-th">
+                            <i class="fas fa-fire"></i> TH
+                        </span>
+                        {% elif car.treasure_hunt == 'CHASE' %}
+                        <span class="badge">
+                            <i class="fas fa-gem"></i> Chase
+                        </span>
+                        {% endif %}
+                        {% if car.series %}
+                        <span class="badge badge-outline">{{ car.series.name|truncatewords:2 }}</span>
+                        {% endif %}
+                        {% if car.is_favorite %}
+                        <span class="badge" style="background: var(--yellow); color: var(--black);">
+                            <i class="fas fa-heart"></i>
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No cars in this case yet</p>
+                <a href="{% url 'dashboard' %}" class="button-54">Add Cars</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

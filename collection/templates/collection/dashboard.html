@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Hot Wheels Collection</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--white);
+            color: var(--black);
+        }
+
+        /* Button */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        .button-red {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .button-red:hover {
+            background: var(--black);
+        }
+
+        .button-small {
+            font-size: 11px;
+            padding: 0.4em 0.8em;
+            letter-spacing: 1px;
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem 4%;
+            border-bottom: 4px solid var(--black);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Messages */
+        .messages {
+            padding: 1rem 4%;
+            background: var(--yellow);
+            border-bottom: 4px solid var(--black);
+        }
+
+        .message {
+            padding: 1rem;
+            border: 3px solid var(--black);
+            background: var(--white);
+            font-weight: 600;
+        }
+
+        .message.success {
+            border-color: green;
+        }
+
+        .message.error {
+            border-color: var(--red);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .stat {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-right: 4px solid var(--black);
+        }
+
+        .stat:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Filters */
+        .filters {
+            padding: 2rem 4%;
+            border-bottom: 4px solid var(--black);
+            background: #f5f5f5;
+        }
+
+        .filters-form {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select {
+            padding: 0.75rem 1rem;
+            border: 3px solid var(--black);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--white);
+            cursor: pointer;
+            letter-spacing: 0.05em;
+        }
+
+        select:focus {
+            outline: none;
+            background: var(--yellow);
+        }
+
+        /* Cars Grid */
+        .cars-section {
+            padding: 4rem 4%;
+        }
+
+        .cars-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            gap: 2rem;
+        }
+
+        .car-card {
+            border: 4px solid var(--black);
+            background: var(--white);
+            box-shadow: 6px 6px 0px var(--black);
+            transition: all 0.3s;
+        }
+
+        .car-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--black);
+        }
+
+        .car-image-wrapper {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+            overflow: hidden;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .car-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .car-content {
+            padding: 1.5rem;
+        }
+
+        .car-name {
+            font-size: 1.125rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .car-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .car-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .car-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 6rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 4%;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat {
+                border-right: none;
+                border-bottom: 4px solid var(--black);
+                padding: 2rem 1rem;
+            }
+
+            .stat:nth-child(2n) {
+                border-right: 4px solid var(--black);
+            }
+
+            .stat:last-child {
+                border-right: none;
+            }
+
+            .stat-number {
+                font-size: 3rem;
+            }
+
+            .filters {
+                padding: 1.5rem 4%;
+            }
+
+            .cars-section {
+                padding: 3rem 4%;
+            }
+
+            .cars-grid {
+                gap: 1.5rem;
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.5em 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">Dashboard</h1>
+        <div class="header-actions">
+            <a href="{% url 'manage_collection' %}" class="button-54">
+                <i class="fas fa-cog"></i> Manage
+            </a>
+            <a href="{% url 'home' %}" class="button-54">
+                <i class="fas fa-home"></i> View Site
+            </a>
+            <a href="{% url 'logout' %}" class="button-54">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">
+            <i class="fas fa-check-circle"></i> {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-number">{{ cars.count }}</div>
+            <div class="stat-label">Total Cars</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">{{ cases.count }}</div>
+            <div class="stat-label">Cases</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">{{ series.count }}</div>
+            <div class="stat-label">Series</div>
+        </div>
+        <div class="stat">
+            <div class="stat-number">{{ cars|length }}</div>
+            <div class="stat-label">In View</div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+        <form method="get" class="filters-form">
+            <select name="case" onchange="this.form.submit()">
+                <option value="">All Cases</option>
+                {% for case in cases %}
+                <option value="{{ case.name }}" {% if case_filter == case.name %}selected{% endif %}>
+                    Case {{ case.name }}
+                </option>
+                {% endfor %}
+            </select>
+            
+            <select name="series" onchange="this.form.submit()">
+                <option value="">All Series</option>
+                {% for s in series %}
+                <option value="{{ s.slug }}" {% if series_filter == s.slug %}selected{% endif %}>
+                    {{ s.name }}
+                </option>
+                {% endfor %}
+            </select>
+            
+            <select name="th" onchange="this.form.submit()">
+                <option value="">All Types</option>
+                <option value="STH" {% if th_filter == 'STH' %}selected{% endif %}>Super TH</option>
+                <option value="TH" {% if th_filter == 'TH' %}selected{% endif %}>Treasure Hunt</option>
+                <option value="CHASE" {% if th_filter == 'CHASE' %}selected{% endif %}>Chase</option>
+                <option value="NONE" {% if th_filter == 'NONE' %}selected{% endif %}>Regular</option>
+            </select>
+            
+            {% if case_filter or series_filter or th_filter %}
+            <a href="{% url 'dashboard' %}" class="button-54">
+                <i class="fas fa-times"></i> Clear
+            </a>
+            {% endif %}
+
+            <a href="{% url 'car_add' %}" class="button-54 button-red" style="margin-left: auto;">
+                <i class="fas fa-plus"></i> Add Car
+            </a>
+        </form>
+    </div>
+
+    <!-- Cars Grid -->
+    <div class="cars-section">
+        <div class="cars-grid">
+            {% for car in cars %}
+            <div class="car-card">
+                <div class="car-image-wrapper">
+                    {% if car.image %}
+                    <img src="{{ car.image.url }}" alt="{{ car.casting_name }}">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #ccc;">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="car-content">
+                    <h3 class="car-name">{{ car.casting_name }}</h3>
+                    <div class="car-meta">
+                        <span class="car-meta-item">
+                            <i class="fas fa-calendar-alt"></i> {{ car.year }}
+                        </span>
+                        <span class="car-meta-item">
+                            <i class="fas fa-palette"></i> {{ car.color }}
+                        </span>
+                        {% if car.case %}
+                        <span class="car-meta-item">
+                            <i class="fas fa-box"></i> {{ car.case.name }}
+                        </span>
+                        {% endif %}
+                        {% if car.treasure_hunt != 'NONE' %}
+                        <span class="car-meta-item">
+                            <i class="fas fa-star"></i> {{ car.treasure_hunt }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="car-actions">
+                        <a href="{% url 'car_detail' car.slug %}" class="button-54 button-small">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="{% url 'car_edit' car.slug %}" class="button-54 button-small">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'car_delete' car.slug %}" class="button-54 button-small">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No cars found</p>
+                <!-- <a href="{% url 'car_add' %}" class="button-54 button-red">
+                    <i class="fas fa-plus"></i> Add Your First Car
+                </a> -->
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

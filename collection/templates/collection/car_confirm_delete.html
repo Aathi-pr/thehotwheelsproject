@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Car — Hot Wheels Collection</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 2rem 4%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Button */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        .button-red {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .button-red:hover {
+            background: var(--black);
+        }
+
+        .button-secondary {
+            background: #f5f5f5;
+        }
+
+        /* Delete Container */
+        .delete-container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0px var(--black);
+        }
+
+        .delete-header {
+            padding: 3rem;
+            border-bottom: 4px solid var(--black);
+            background: var(--red);
+            text-align: center;
+        }
+
+        .delete-icon {
+            font-size: 4rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .delete-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            color: var(--white);
+        }
+
+        .delete-subtitle {
+            font-size: 0.875rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Delete Body */
+        .delete-body {
+            padding: 3rem;
+        }
+
+        .car-info {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 3px solid var(--black);
+            background: var(--white);
+        }
+
+        .car-info-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            color: var(--black);
+        }
+
+        .car-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--black);
+            padding: 0.75rem;
+            background: #f5f5f5;
+            border-left: 4px solid var(--red);
+        }
+
+        .car-info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .car-info-item i {
+            width: 24px;
+            color: var(--red);
+            font-size: 1.125rem;
+            text-align: center;
+        }
+
+        .car-info-label {
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .car-info-value {
+            font-weight: 600;
+            color: var(--black);
+        }
+
+        .warning-message {
+            padding: 1.5rem;
+            border: 3px solid var(--red);
+            background: #fff5f5;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .warning-icon {
+            font-size: 1.5rem;
+            color: var(--red);
+        }
+
+        .warning-text {
+            flex: 1;
+        }
+
+        .warning-text strong {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--red);
+        }
+
+        .warning-text p {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            font-weight: 500;
+            color: var(--black);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-actions .button-54 {
+            flex: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 2%;
+            }
+
+            .delete-container {
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .delete-header,
+            .delete-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .delete-icon {
+                font-size: 3rem;
+            }
+
+            .car-info-item {
+                font-size: 0.875rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.6em 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="delete-container">
+        <!-- Header -->
+        <div class="delete-header">
+            <div class="delete-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1 class="delete-title">Delete Car</h1>
+            <p class="delete-subtitle">Confirm Deletion</p>
+        </div>
+
+        <!-- Body -->
+        <div class="delete-body">
+            <!-- Car Info -->
+            <div class="car-info">
+                <h2 class="car-info-title">{{ object.casting_name }}</h2>
+                
+                <div class="car-info-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span><strong>Year:</strong> {{ object.year }}</span>
+                </div>
+                
+                <div class="car-info-item">
+                    <i class="fas fa-palette"></i>
+                    <span><strong>Color:</strong> {{ object.color }}</span>
+                </div>
+                
+                {% if object.number %}
+                <div class="car-info-item">
+                    <i class="fas fa-hashtag"></i>
+                    <span><strong>Number:</strong> {{ object.number }}</span>
+                </div>
+                {% endif %}
+                
+                {% if object.case %}
+                <div class="car-info-item">
+                    <i class="fas fa-box"></i>
+                    <span><strong>Case:</strong> {{ object.case.name }}</span>
+                </div>
+                {% endif %}
+                
+                {% if object.series %}
+                <div class="car-info-item">
+                    <i class="fas fa-layer-group"></i>
+                    <span><strong>Series:</strong> {{ object.series.name }}</span>
+                </div>
+                {% endif %}
+                
+                {% if object.treasure_hunt != 'NONE' %}
+                <div class="car-info-item">
+                    <i class="fas fa-star"></i>
+                    <span><strong>Type:</strong> {{ object.get_treasure_hunt_display }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Warning -->
+            <div class="warning-message">
+                <div class="warning-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="warning-text">
+                    <strong>Warning: This action cannot be undone!</strong>
+                    <p>Are you sure you want to permanently delete this car from your collection? All associated data will be removed.</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-actions">
+                    <button type="submit" class="button-54 button-red">
+                        <i class="fas fa-trash"></i> Yes, Delete Car
+                    </button>
+
+                    <a href="{% url 'dashboard' %}" class="button-54 button-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

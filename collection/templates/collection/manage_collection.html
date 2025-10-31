@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Collection — Hot Wheels</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Button */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        .button-red {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .button-red:hover {
+            background: var(--black);
+        }
+
+        .button-small {
+            font-size: 11px;
+            padding: 0.4em 0.8em;
+            letter-spacing: 1px;
+        }
+
+        /* Header */
+        .header {
+            padding: 2rem 4%;
+            background: var(--white);
+            border-bottom: 4px solid var(--black);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* Section */
+        .section {
+            padding: 4rem 4%;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .section:nth-child(even) {
+            background: var(--white);
+        }
+
+        .section-header {
+            max-width: 1600px;
+            margin: 0 auto 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* Grid */
+        .grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: 2rem;
+        }
+
+        /* Card */
+        .card {
+            border: 4px solid var(--black);
+            background: var(--white);
+            box-shadow: 6px 6px 0px var(--black);
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px var(--black);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .card-info {
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .card-info i {
+            width: 20px;
+            margin-right: 0.5rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem 4%;
+            }
+
+            .header-title {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 3rem 4%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .card {
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .card:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 6px 6px 0px var(--black);
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.5em 0.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">Manage Collection</h1>
+        <a href="{% url 'dashboard' %}" class="button-54">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Cases Section -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">Cases</h2>
+            <a href="{% url 'case_add' %}" class="button-54 button-red">
+                <i class="fas fa-plus"></i> Add Case
+            </a>
+        </div>
+        
+        <div class="grid">
+            {% for case in cases %}
+            <div class="card">
+                <h3 class="card-title">Case {{ case.name }}</h3>
+                <p class="card-info"><i class="far fa-calendar"></i> Year: {{ case.year }}</p>
+                <p class="card-info"><i class="fas fa-car"></i> Cars: {{ case.car_count }}</p>
+                {% if case.description %}
+                <p class="card-info" style="margin-top: 1rem;">{{ case.description|truncatewords:15 }}</p>
+                {% endif %}
+                <div class="card-actions">
+                    <a href="{% url 'case_detail' case.name %}" class="button-54 button-small">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="{% url 'case_edit' case.name %}" class="button-54 button-small">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No cases yet. Add your first case!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Series Section -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">Series</h2>
+            <a href="{% url 'series_add' %}" class="button-54 button-red">
+                <i class="fas fa-plus"></i> Add Series
+            </a>
+        </div>
+        
+        <div class="grid">
+            {% for s in series %}
+            <div class="card">
+                <h3 class="card-title">{{ s.name|upper }}</h3>
+                <p class="card-info"><i class="fas fa-layer-group"></i> Cars: {{ s.car_count }}</p>
+                <p class="card-info"><i class="fas fa-toggle-{% if s.is_active %}on{% else %}off{% endif %}"></i> Status: {% if s.is_active %}Active{% else %}Inactive{% endif %}</p>
+                {% if s.description %}
+                <p class="card-info" style="margin-top: 1rem;">{{ s.description|truncatewords:15 }}</p>
+                {% endif %}
+                <div style="width: 40px; height: 40px; background: {{ s.color_theme }}; border: 3px solid #000; margin: 1rem 0;"></div>
+                <div class="card-actions">
+                    <a href="{% url 'series_detail' s.slug %}" class="button-54 button-small">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a href="{% url 'series_edit' s.slug %}" class="button-54 button-small">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No series yet. Add your first series!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

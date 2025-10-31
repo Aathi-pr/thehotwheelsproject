@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title|default:"Add Case" }} — Hot Wheels Collection</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 2rem 4%;
+        }
+
+        /* Button */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        .button-red {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .button-red:hover {
+            background: var(--black);
+        }
+
+        .button-secondary {
+            background: #f5f5f5;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0px var(--black);
+        }
+
+        .form-header {
+            padding: 3rem;
+            border-bottom: 4px solid var(--black);
+            background: var(--yellow);
+        }
+
+        .form-title {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .form-subtitle {
+            font-size: 0.875rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Messages */
+        .messages {
+            padding: 2rem 3rem;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .message {
+            padding: 1rem;
+            border: 3px solid var(--black);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message.error {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .message.success {
+            background: #51cf66;
+            color: white;
+        }
+
+        /* Form Body */
+        .form-body {
+            padding: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .required::after {
+            content: ' *';
+            color: var(--red);
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 3px solid var(--black);
+            background: var(--white);
+            font-size: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            outline: none;
+            background: var(--yellow);
+            border-color: var(--black);
+        }
+
+        .form-select {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 4px solid var(--black);
+        }
+
+        .form-actions .button-54 {
+            flex: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 2%;
+            }
+
+            .form-container {
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .form-header,
+            .messages,
+            .form-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.6em 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Header -->
+        <div class="form-header">
+            <h1 class="form-title">{{ title|upper }}</h1>
+            <p class="form-subtitle">Case Management</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post" class="form-body">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label required">
+                    <i class="fas fa-tag"></i> Case Letter
+                </label>
+                {{ form.name }}
+                <span class="help-text">Select the case letter (A-Q)</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label required">
+                    <i class="far fa-calendar"></i> Year
+                </label>
+                {{ form.year }}
+                <span class="help-text">Enter the release year</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-align-left"></i> Description
+                </label>
+                {{ form.description }}
+                <span class="help-text">Optional: Add notes about this case mix</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="fas fa-calendar-day"></i> Release Date
+                </label>
+                {{ form.release_date }}
+                <span class="help-text">Optional: Specify the exact release date</span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="button-54 button-red">
+                    <i class="fas fa-save"></i> {% if case %}Update{% else %}Create{% endif %} Case
+                </button>
+
+                <a href="{% url 'manage_collection' %}" class="button-54 button-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

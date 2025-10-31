@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title|default:"Add Car" }} — Hot Wheels Collection</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 2rem 4%;
+        }
+
+        /* Button */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        .button-red {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .button-red:hover {
+            background: var(--black);
+        }
+
+        .button-secondary {
+            background: #f5f5f5;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            border: 4px solid var(--black);
+            box-shadow: 8px 8px 0px var(--black);
+        }
+
+        .form-header {
+            padding: 3rem;
+            border-bottom: 4px solid var(--black);
+            background: var(--yellow);
+        }
+
+        .form-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .form-subtitle {
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Messages */
+        .messages {
+            padding: 2rem 3rem;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .message {
+            padding: 1rem;
+            border: 3px solid var(--black);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .message.error {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .message.success {
+            background: #51cf66;
+            color: white;
+        }
+
+        /* Form Body */
+        .form-body {
+            padding: 3rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .required::after {
+            content: ' *';
+            color: var(--red);
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            padding: 0.875rem;
+            border: 3px solid var(--black);
+            background: var(--white);
+            font-size: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            outline: none;
+            background: var(--yellow);
+            border-color: var(--black);
+        }
+
+        .form-select {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            grid-column: 1 / -1;
+            margin: 2rem 0 1rem;
+            padding-top: 2rem;
+            border-top: 4px solid var(--black);
+            position: relative;
+        }
+
+        .section-title {
+            position: absolute;
+            top: -1rem;
+            left: 0;
+            background: var(--white);
+            padding: 0.5rem 1rem;
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 3px solid var(--black);
+            background: var(--yellow);
+        }
+
+        /* Available Options */
+        .available-options {
+            margin-top: 0.75rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border: 2px solid var(--black);
+        }
+
+        .available-options-title {
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .option-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .option-tag {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: var(--white);
+            border: 2px solid var(--black);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 3px solid var(--black);
+            background: #f5f5f5;
+        }
+
+        .form-check-input {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--black);
+            cursor: pointer;
+            accent-color: var(--black);
+        }
+
+        .checkbox-label {
+            font-weight: 700;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Image Preview */
+        .image-preview {
+            margin-top: 1rem;
+            border: 3px solid var(--black);
+            padding: 1rem;
+            background: #f5f5f5;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            border: 3px solid var(--black);
+            display: block;
+        }
+
+        .current-image {
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        /* Help Text */
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Error List */
+        .errorlist {
+            list-style: none;
+            padding: 0.75rem;
+            background: #ff6b6b;
+            border: 3px solid var(--black);
+            color: white;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 4px solid var(--black);
+        }
+
+        .form-actions .button-54 {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 2%;
+            }
+
+            .form-container {
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .form-header,
+            .messages,
+            .form-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .section-divider {
+                margin: 1.5rem 0 1rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions .button-54 {
+                width: 100%;
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.6em 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-title {
+                font-size: 1.75rem;
+            }
+
+            .form-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .available-options {
+                padding: 0.75rem;
+            }
+
+            .option-tag {
+                font-size: 0.7rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Header -->
+        <div class="form-header">
+            <h1 class="form-title">{{ title|default:"ADD CAR" }}</h1>
+            <p class="form-subtitle">Fill in the details below</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Form -->
+        <form method="post" enctype="multipart/form-data" class="form-body">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+                
+                <!-- Basic Information -->
+                <div class="section-divider">
+                    <span class="section-title"><i class="fas fa-info-circle"></i> Basic Info</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Casting Name</label>
+                    {{ form.casting_name }}
+                    {% if form.casting_name.help_text %}
+                    <span class="help-text">{{ form.casting_name.help_text }}</span>
+                    {% endif %}
+                    {% if form.casting_name.errors %}
+                        {{ form.casting_name.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Number</label>
+                    {{ form.number }}
+                    <span class="help-text">e.g., 1/250, 01/10</span>
+                    {% if form.number.errors %}
+                        {{ form.number.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Year</label>
+                    {{ form.year }}
+                    {% if form.year.errors %}
+                        {{ form.year.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Color</label>
+                    {{ form.color }}
+                    {% if form.color.errors %}
+                        {{ form.color.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Classification -->
+                <div class="section-divider">
+                    <span class="section-title"><i class="fas fa-tags"></i> Classification</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Case</label>
+                    {{ form.case }}
+                    {% if form.case.help_text %}
+                    <span class="help-text">{{ form.case.help_text }}</span>
+                    {% endif %}
+                    
+                    <div class="available-options">
+                        <div class="available-options-title">Available Cases:</div>
+                        <div class="option-list">
+                            {% for case in form.fields.case.queryset %}
+                            <span class="option-tag">{{ case.year }} - {{ case.name }}</span>
+                            {% empty %}
+                            <span class="help-text">No cases available.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    {% if form.case.errors %}
+                        {{ form.case.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Series</label>
+                    {{ form.series }}
+                    {% if form.series.help_text %}
+                    <span class="help-text">{{ form.series.help_text }}</span>
+                    {% endif %}
+                    
+                    <div class="available-options">
+                        <div class="available-options-title">Available Series:</div>
+                        <div class="option-list">
+                            {% for s in form.fields.series.queryset %}
+                            <span class="option-tag">{{ s.name|truncatewords:3 }}</span>
+                            {% empty %}
+                            <span class="help-text">No series available.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    {% if form.series.errors %}
+                        {{ form.series.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Treasure Hunt Type</label>
+                    {{ form.treasure_hunt }}
+                    {% if form.treasure_hunt.errors %}
+                        {{ form.treasure_hunt.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Details -->
+                <div class="section-divider">
+                    <span class="section-title"><i class="fas fa-list"></i> Details</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Manufacturer</label>
+                    {{ form.manufacturer }}
+                    {% if form.manufacturer.errors %}
+                        {{ form.manufacturer.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Scale</label>
+                    {{ form.scale }}
+                    {% if form.scale.errors %}
+                        {{ form.scale.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Condition</label>
+                    {{ form.condition }}
+                    {% if form.condition.errors %}
+                        {{ form.condition.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Quantity</label>
+                    {{ form.quantity }}
+                    {% if form.quantity.errors %}
+                        {{ form.quantity.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Financial -->
+                <div class="section-divider">
+                    <span class="section-title"><i class="fas fa-dollar-sign"></i> Financial Info</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Purchase Date</label>
+                    {{ form.purchase_date }}
+                    {% if form.purchase_date.errors %}
+                        {{ form.purchase_date.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Purchase Price</label>
+                    {{ form.purchase_price }}
+                    {% if form.purchase_price.errors %}
+                        {{ form.purchase_price.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Estimated Value</label>
+                    {{ form.estimated_value }}
+                    {% if form.estimated_value.errors %}
+                        {{ form.estimated_value.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Image -->
+                <div class="section-divider">
+                    <span class="section-title"><i class="fas fa-image"></i> Image</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label">Car Image</label>
+                    {{ form.image }}
+                    {% if car.image %}
+                    <div class="image-preview">
+                        <p class="current-image"><strong>Current Image:</strong></p>
+                        <img src="{{ car.image.url }}" alt="{{ car.casting_name }}">
+                    </div>
+                    {% endif %}
+                    {% if form.image.errors %}
+                        {{ form.image.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Notes -->
+                <div class="section-divider">
+                    <span class="section-title"><i class="fas fa-sticky-note"></i> Additional Info</span>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label">Notes</label>
+                    {{ form.notes }}
+                    {% if form.notes.errors %}
+                        {{ form.notes.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Checkboxes -->
+                <div class="form-group">
+                    <div class="checkbox-wrapper">
+                        {{ form.is_favorite }}
+                        <label class="checkbox-label">
+                            <i class="fas fa-heart"></i> Favorite
+                        </label>
+                    </div>
+                    {% if form.is_favorite.errors %}
+                        {{ form.is_favorite.errors }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-wrapper">
+                        {{ form.is_for_trade }}
+                        <label class="checkbox-label">
+                            <i class="fas fa-exchange-alt"></i> For Trade
+                        </label>
+                    </div>
+                    {% if form.is_for_trade.errors %}
+                        {{ form.is_for_trade.errors }}
+                    {% endif %}
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="button-54 button-red">
+                        <i class="fas fa-save"></i> {% if car %}Update{% else %}Add{% endif %} Car
+                    </button>
+
+                    <a href="{% url 'dashboard' %}" class="button-54 button-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+
+                    {% if car %}
+                    <a href="{% url 'car_delete' car.slug %}" class="button-54" style="background: #ff6b6b; color: white;">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Image preview
+        const imageInput = document.querySelector('input[type="file"]');
+        if (imageInput) {
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        let preview = document.querySelector('.image-preview');
+                        if (!preview) {
+                            preview = document.createElement('div');
+                            preview.className = 'image-preview';
+                            imageInput.parentNode.appendChild(preview);
+                        }
+                        preview.innerHTML = `
+                            <p class="current-image"><strong>New Image Preview:</strong></p>
+                            <img src="${e.target.result}" alt="Preview">
+                        `;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

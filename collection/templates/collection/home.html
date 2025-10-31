@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if collector %}{{ collector.name }}{% else %}Hot Wheels{% endif %} — Die-Cast Collection</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --gray: #808080;
+            --red: #ff0000;
+            --yellow: #ffed00;
+            --blue: #0066ff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Button Styles */
+        .button-54 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            color: #000;
+            cursor: pointer;
+            border: 3px solid;
+            padding: 0.5em 1em;
+            box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            background: var(--white);
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.1s;
+            white-space: nowrap;
+        }
+
+        .button-54:active {
+            box-shadow: 0px 0px 0px 0px;
+            top: 5px;
+            left: 5px;
+        }
+
+        .button-54:hover {
+            background: var(--yellow);
+        }
+
+        .button-red {
+            background: var(--red);
+            color: var(--white);
+            border-color: var(--black);
+        }
+
+        .button-red:hover {
+            background: var(--black);
+        }
+
+        .button-small {
+            font-size: 11px;
+            padding: 0.4em 0.8em;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: var(--white);
+            border-bottom: 4px solid var(--black);
+        }
+
+        .nav-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--black);
+            text-decoration: none;
+            text-transform: uppercase;
+            z-index: 1001;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--black);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--red);
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            background: var(--white);
+            border: 3px solid var(--black);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            z-index: 1001;
+            position: relative;
+            box-shadow: 2px 2px 0px var(--black);
+            transition: all 0.1s;
+        }
+
+        .mobile-menu-toggle:active {
+            box-shadow: 0px 0px 0px var(--black);
+            transform: translate(2px, 2px);
+        }
+
+        .mobile-menu-toggle:hover {
+            background: var(--yellow);
+        }
+
+        /* Desktop Menu */
+        @media (min-width: 769px) {
+            .nav-link {
+                display: block;
+            }
+            
+            .mobile-menu-toggle {
+                display: none;
+            }
+        }
+
+        /* Mobile Menu */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--white);
+                flex-direction: column;
+                padding: 6rem 2rem 2rem;
+                justify-content: flex-start;
+                gap: 2rem;
+                transform: translateX(100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 999;
+                overflow-y: auto;
+                border-left: 4px solid var(--black);
+            }
+
+            .nav-menu.active {
+                transform: translateX(0);
+            }
+
+            .nav-link {
+                display: block;
+                font-size: 1.5rem;
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+                border: 3px solid var(--black);
+                background: var(--white);
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .nav-link:active {
+                transform: translate(2px, 2px);
+                box-shadow: 2px 2px 0px var(--black);
+            }
+
+            .nav-menu .button-54 {
+                width: 100%;
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            /* Mobile Menu Overlay */
+            .menu-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+            }
+
+            .menu-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 4% 4rem;
+            position: relative;
+            border-bottom: 4px solid var(--black);
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.02) 2px,
+                    rgba(0,0,0,0.02) 4px
+                );
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .hero-tag {
+            font-size: 0.875rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 3px solid var(--black);
+            background: var(--yellow);
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 12vw, 10rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 0px var(--red);
+            word-wrap: break-word;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 600;
+            margin-bottom: 3rem;
+            letter-spacing: 0.05em;
+            padding: 0 1rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border: 4px solid var(--black);
+            background: var(--white);
+            box-shadow: 6px 6px 0px var(--black);
+        }
+
+        .hero-stat-number {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Section */
+        section {
+            padding: 6rem 4%;
+            position: relative;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .section-header {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            text-align: center;
+        }
+
+        .section-number {
+            font-size: 0.875rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            color: var(--red);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 6vw, 5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-description {
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Grid */
+        .grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: 2rem;
+        }
+
+        /* Card */
+        .card {
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            border: 4px solid var(--black);
+            background: var(--white);
+            transition: all 0.3s;
+            box-shadow: 6px 6px 0px var(--black);
+        }
+
+        .card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0px var(--black);
+        }
+
+        .card:active {
+            transform: translate(2px, 2px);
+            box-shadow: 4px 4px 0px var(--black);
+        }
+
+        .card-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #f0f0f0;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 4px solid var(--black);
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.08);
+        }
+
+        .card-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            min-width: 50px;
+            min-height: 50px;
+            padding: 0.5rem;
+            background: var(--yellow);
+            border: 3px solid var(--black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+            font-weight: 800;
+            z-index: 3;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--red);
+        }
+
+        .card-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            text-transform: uppercase;
+            word-wrap: break-word;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .card-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #333;
+            min-height: 3em;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Featured Section */
+        .featured {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .featured .section-title {
+            color: var(--white);
+        }
+
+        .featured .section-description {
+            color: rgba(255,255,255,0.8);
+        }
+
+.featured .card {
+    background: var(--white);
+    box-shadow: 6px 6px 0px var(--red);
+    color: var(--black);
+}
+
+
+        .featured .card:hover {
+            box-shadow: 10px 10px 0px var(--red);
+        }
+
+        .featured .card:active {
+            box-shadow: 4px 4px 0px var(--red);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--red);
+            color: var(--white);
+            padding: 4rem 4%;
+        }
+
+        .stats-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 2rem 1rem;
+            border: 4px solid var(--white);
+            background: var(--black);
+        }
+
+        .stat-box-number {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-box-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 4%;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--white);
+        }
+
+        .footer-brand {
+            grid-column: 1 / -1;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .footer-tagline {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        .footer-column h4 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--yellow);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--yellow);
+        }
+
+        .footer-bottom {
+            max-width: 1600px;
+            margin: 2rem auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            font-size: 1.125rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem 4%;
+            }
+
+            .nav-logo {
+                font-size: 1rem;
+            }
+
+            section {
+                padding: 4rem 4%;
+            }
+
+            .hero {
+                padding: 5rem 4% 3rem;
+            }
+
+            .hero-title {
+                text-shadow: 3px 3px 0px var(--red);
+            }
+
+            .hero-stats {
+                gap: 1rem;
+            }
+
+            .hero-stat {
+                padding: 1rem 0.5rem;
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .grid {
+                gap: 1.5rem;
+            }
+
+            .card {
+                box-shadow: 4px 4px 0px var(--black);
+            }
+
+            .card:hover {
+                transform: translate(-2px, -2px);
+                box-shadow: 6px 6px 0px var(--black);
+            }
+
+            .card-content {
+                padding: 1.25rem;
+            }
+
+            .stats-section {
+                padding: 3rem 4%;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-box {
+                padding: 1.5rem 0.75rem;
+            }
+
+            .footer-content {
+                gap: 1.5rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .button-54 {
+                font-size: 12px;
+                padding: 0.5em 0.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card-meta {
+                font-size: 0.75rem;
+            }
+
+            .button-54 {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <a href="{% url 'home' %}" class="nav-logo">{% if collector %}{{ collector.name }}{% else %}Hot Wheels{% endif %}</a>
+        <button class="mobile-menu-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+            <i class="fas fa-bars" id="menuIcon"></i>
+        </button>
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#cases" class="nav-link" onclick="closeMenu()">Cases</a></li>
+            <li><a href="#series" class="nav-link" onclick="closeMenu()">Series</a></li>
+            <li><a href="{% url 'login' %}" class="button-54 button-red button-small">Dashboard</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">Die-Cast Collection</div>
+            <h1 class="hero-title">{% if collector %}{{ collector.name|upper }}{% else %}ricky rodger{% endif %}</h1>
+            <p class="hero-subtitle">Curating the World's Finest Hot Wheels Collection</p>
+            
+            <div class="hero-actions">
+                <a href="#cases" class="button-54">View Cases</a>
+                <a href="#series" class="button-54">Browse Series</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-number">{{ total_cars|default:0 }}</div>
+                    <div class="hero-stat-label">Cars</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">{{ total_cases|default:0 }}</div>
+                    <div class="hero-stat-label">Cases</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">{{ total_series|default:0 }}</div>
+                    <div class="hero-stat-label">Series</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-number">{{ total_sth|default:0 }}</div>
+                    <div class="hero-stat-label">STH</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cases Section -->
+    <section id="cases">
+        <div class="section-header">
+            <div class="section-number">001 — Cases</div>
+            <h2 class="section-title">Collection by Case</h2>
+            <p class="section-description">Explore our meticulously organized collection sorted by Hot Wheels case releases. Each case represents a unique mainline assortment.</p>
+        </div>
+        <div class="grid">
+            {% for case in cases %}
+            {% if case.car_count > 0 %}
+            <a href="{% url 'case_detail' case.name %}" class="card">
+                <div class="card-image">
+                    <div class="card-number">{{ case.name }}</div>
+                    {% if case.cars.all.0.image %}
+                    <img src="{{ case.cars.all.0.image.url }}" alt="Case {{ case.name }}">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 800; color: #ddd;">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <div class="card-label">{{ case.year }} Case Mix</div>
+                    <h3 class="card-title">Case {{ case.name }}</h3>
+                    <div class="card-meta">
+                        <span class="card-meta-item">
+                            <i class="fas fa-car"></i> {{ case.car_count }} Cars
+                        </span>
+                        {% if case.release_date %}
+                        <span class="card-meta-item">
+                            <i class="far fa-calendar"></i> {{ case.release_date|date:"M Y" }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% if case.description %}
+                    <p class="card-description">{{ case.description|truncatewords:15 }}</p>
+                    {% else %}
+                    <p class="card-description">Hot Wheels Case {{ case.name }} from {{ case.year }} featuring a unique assortment of die-cast vehicles.</p>
+                    {% endif %}
+                    <div class="card-footer">
+                        <span class="button-54 button-small">View Collection <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No cases available yet</p>
+                <a href="{% url 'login' %}" class="button-54">Add Your First Case</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Series Section -->
+    <section id="series" class="featured">
+        <div class="section-header">
+            <div class="section-number" style="color: var(--yellow);">002 — Series</div>
+            <h2 class="section-title">Collection by Series</h2>
+            <p class="section-description">Browse our collection organized by themed series including J-Imports, Screen Time, Factory Fresh, and more exclusive releases.</p>
+        </div>
+        <div class="grid">
+            {% for s in series %}
+            {% if s.car_count > 0 %}
+            <a href="{% url 'series_detail' s.slug %}" class="card">
+                <div class="card-image">
+                    <div class="card-number" style="background: {{ s.color_theme }};">{{ forloop.counter|stringformat:"02d" }}</div>
+
+                    {% if s.cars.all.0.image %}
+                    <img src="{{ s.cars.all.0.image.url }}" alt="{{ s.name }}">
+                    {% else %}
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 800; color: #ddd;">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-content">
+                    <div class="card-label">Series Collection</div>
+                    <h3 class="card-title">{{ s.name|upper }}</h3>
+                    <div class="card-meta">
+                        <span class="card-meta-item">
+                            <i class="fas fa-layer-group"></i> {{ s.car_count }} Models
+                        </span>
+                    </div>
+                    {% if s.description %}
+                    <p class="card-description">{{ s.description|truncatewords:15 }}</p>
+                    {% else %}
+                    <p class="card-description">Explore the {{ s.name }} series featuring themed die-cast vehicles and unique designs.</p>
+                    {% endif %}
+                    <div class="card-footer">
+                        <span class="button-54 button-small">Explore Series <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <p>No series available yet</p>
+                <a href="{% url 'login' %}" class="button-54">Add Your First Series</a>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">{% if collector %}{{ collector.name }}{% else %}Hot Wheels Collection{% endif %}</div>
+                <p class="footer-tagline">A meticulously curated collection of die-cast vehicles, treasure hunts, and limited editions. Celebrating the art of miniature automotive excellence.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Collection</h4>
+                <ul>
+                    <li><a href="#cases">Cases</a></li>
+                    <li><a href="#series">Series</a></li>
+                    <li><a href="{% url 'home' %}">Gallery</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="{% url 'login' %}">Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 {% if collector %}{{ collector.name }}{% else %}Collection{% endif %}. All rights reserved.</p>
+            <p>Designed with precision & passion</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const icon = document.getElementById('menuIcon');
+            
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Toggle icon between bars and times
+            if (menu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close menu function
+        function closeMenu() {
+            const menu = document.getElementById('navMenu');
+            const overlay = document.getElementById('menuOverlay');
+            const icon = document.getElementById('menuIcon');
+            
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = '';
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const navHeight = document.querySelector('.nav').offsetHeight;
+                    const targetPosition = target.offsetTop - navHeight;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    closeMenu();
+                }
+            });
+        });
+
+        // Prevent body scroll when menu is open
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeMenu();
+            }
+        });
+    </script>
+</body>
+</html>
